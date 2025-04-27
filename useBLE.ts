@@ -12,7 +12,7 @@ import * as ExpoDevice from "expo-device";
 import base64 from "react-native-base64";
 
 
-// UUIDs estándar para servicio y característica de ritmo cardíaco
+// Standard UUIDs for heart rate service and feature
 const HEART_RATE_UUID = "0000180d-0000-1000-8000-00805f9b34fb";
 const HEART_RATE_CHARACTERISTIC = "00002a37-0000-1000-8000-00805f9b34fb";
 
@@ -38,24 +38,24 @@ function useBLE(): BluetoothLowEnergyApi {
     const bluetoothScanPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
       {
-        title: "Permiso de ubicación",
-        message: "Bluetooth Low Energy requiere permisos de ubicación",
+        title:"Location permission" ,
+        message: "Bluetooth Low Energy requires location permissions",
         buttonPositive: "OK",
       }
     );
     const bluetoothConnectPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       {
-        title: "Permiso de conexión",
-        message: "Bluetooth Low Energy requiere permisos de conexión",
+        title:"Connection permission",
+        message: "Bluetooth Low Energy requires connection permissions",
         buttonPositive: "OK",
       }
     );
     const fineLocationPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
-        title: "Permiso de ubicación",
-        message: "Bluetooth Low Energy requiere ubicación precisa",
+        title: "Location permission",
+        message: "Bluetooth Low Energy requiere precise location",
         buttonPositive: "OK",
       }
     );
@@ -73,7 +73,7 @@ function useBLE(): BluetoothLowEnergyApi {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
-            title: "Permiso de ubicación",
+            title: "Location permission",
             message: "Bluetooth Low Energy requiere ubicación precisa",
             buttonPositive: "OK",
           }
@@ -94,10 +94,10 @@ function useBLE(): BluetoothLowEnergyApi {
   const scanForPeripherals = () => {
     bleManager.startDeviceScan(null, null, (error, device) => {
       if (error) {
-        console.log("Error al escanear:", error);
+        console.log("Error while scanning:", error);
         return;
       }
-
+      //This line allows me to only search for the device with the specific name so as not to overload the search
       if (device && device.name?.includes("808S")) {
         setAllDevices((prevState: Device[]) => {
           if (!isDuplicateDevice(prevState, device)) {
@@ -112,31 +112,31 @@ function useBLE(): BluetoothLowEnergyApi {
   const connectToDevice = async (device: Device) => {
     try {
       const deviceConnection = await bleManager.connectToDevice(device.id);
-      console.log("✅ Dispositivo conectado:", deviceConnection.name);
+      console.log("✅ Connected device:", deviceConnection.name);
       setConnectedDevice(deviceConnection);
       await deviceConnection.discoverAllServicesAndCharacteristics();
-      await logAvailableServicesAndCharacteristics(deviceConnection); // 👈 Agregado aquí
+      await logAvailableServicesAndCharacteristics(deviceConnection);
       
       bleManager.stopDeviceScan();
       startStreamingData(deviceConnection);
     } catch (e) {
-      console.log("❌ Error al conectar", e);
+      console.log("❌ Error connecting", e);
     }
   };
 
   const logAvailableServicesAndCharacteristics = async (device: Device) => {
     try {
       const services = await device.services();
-      console.log("📡 Servicios disponibles:");
+      console.log("📡Available services :");
       for (const service of services) {
-        console.log(`🔹 Servicio UUID: ${service.uuid}`);
+        console.log(`🔹 Services UUID: ${service.uuid}`);
         const characteristics = await device.characteristicsForService(service.uuid);
         for (const characteristic of characteristics) {
-          console.log(`   └── Característica UUID: ${characteristic.uuid}`);
+          console.log(`   └── Feature UUID: ${characteristic.uuid}`);
         }
       }
     } catch (error) {
-      console.log("❌ Error al obtener servicios/características:", error);
+      console.log("❌ Error getting services/features: ", error);
     }
   };
   
@@ -174,7 +174,7 @@ function useBLE(): BluetoothLowEnergyApi {
 
   const startStreamingData = async (device: Device) => {
     if (!device) {
-      console.log("❌ No hay dispositivo conectado");
+      console.log("❌ No device connected");
       return;
     }
 
