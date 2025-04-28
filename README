@@ -1,0 +1,21 @@
+Steps to use this repository
+
+1. Have React Native Expo installed
+2. On a cell phone (with the developer/USB debugging feature enabled)
+3. Cable
+
+To install and download the repository:
+
+1. Download the repository
+2. Run the npm install command (to install all dependencies)
+3. Check if all dependencies have been downloaded, with emphasis on react-native-ble-plx
+4. Run npx expo prebuild
+5. Connect the phone and enable the debugging sharing feature
+6. Run npx expo run:android (to build and install the app on the phone)
+7. To launch the Expo server again, run npx expo start --dev-client
+
+To connect the BLE device to the app:
+
+1. Enable Bluetooth
+2. Follow the prompts in the app
+3. Connect the device
